@@ -1,0 +1,26 @@
+from tkinter import *
+win = Tk()
+
+win.title("Printer")
+win.geometry("800x100")
+
+
+
+def btn1():
+   print("18")
+   print("10")
+   print("##################")
+   print("#       #        #")
+   print("# ##### # ###### #")
+   print("# # # # #m   #   #")
+   print("# #              #")
+   print("# # # # #  ## ## #")
+   print("# # # # #  #   # #")
+   print("# ##### # ##   # #")
+   print("#       #  #   # #")
+   print("##################")
+
+button1 = Button(win, text = "Click Me To Print", command = btn1)
+
+button1.pack()
+win.mainloop()
