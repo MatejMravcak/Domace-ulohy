@@ -1,26 +1,25 @@
 from tkinter import *
+from tkinter import filedialog
 win = Tk()
 
 win.title("Printer")
-win.geometry("800x100")
+win.geometry("500x450")
 
 
 
-def btn1():
-   print("18")
-   print("10")
-   print("##################")
-   print("#       #        #")
-   print("# ##### # ###### #")
-   print("# # # # #m   #   #")
-   print("# #              #")
-   print("# # # # #  ## ## #")
-   print("# # # # #  #   # #")
-   print("# ##### # ##   # #")
-   print("#       #  #   # #")
-   print("##################")
+def text():
+   #filepath = filedialog.askopenfilename(initialdir= )
+   file = open("textak.txt",'r')
+   h = file.read()
+   my_text.insert(END, h)
+   file.close()
 
-button1 = Button(win, text = "Click Me To Print", command = btn1)
 
-button1.pack()
+my_text = Text(win, width=40, height=20)
+my_text.pack(pady=20)
+
+open_button = Button(win, text="click me", command= text)
+
+open_button.pack(pady=20)
 win.mainloop()
+
