@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import filedialog
+
 win = Tk()
 
 win.title("Printer")
@@ -8,7 +8,7 @@ win.geometry("500x450")
 
 
 def text():
-   #filepath = filedialog.askopenfilename(initialdir= )
+   
    file = open("textak.txt",'r')
    h = file.read()
    my_text.insert(END, h)
