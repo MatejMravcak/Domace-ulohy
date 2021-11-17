@@ -1,0 +1,77 @@
+import tkinter
+import threading
+import random
+import time
+
+
+
+
+def nacitaj_mapu():
+
+    h = open(file = 'txt.txt')
+
+    sirka = int(h.readline(1))
+
+    vyska = int(h.readline(2))
+
+    mapa = []
+
+    # pre kazdy riadok mapy precitaj kazdy riadok a vytvor z nich zoznam (rozsah je po vysku)
+    for y in range(0, 12):
+        citat = h.readline()
+        mapa.append(list(citat))
+
+    h.close()
+
+    return sirka, vyska, mapa
+
+
+######################################################
+
+def vytvor_platno():
+
+    platno = tkinter.Canvas(okno, \
+                                        width= 500*cell_size, \
+                                        height = 500*cell_size)
+    platno.config(bg='red')
+
+    platno.pack()
+
+    for y in range(0, 12):
+        for x in range(0, 12):
+            if mapa[y][x] == '#':
+
+                platno.create_image(x * cell_size + 100 / 2, \
+                                    y * cell_size + 100 / 2, \
+                                    image = photoimage)
+
+    return platno
+photoimage = PhotoImage(file='wall.png')
+mapa = []
+
+
+sirka = 20
+vyska = 0
+
+
+cell_size = 80
+
+        ######################################################
+
+okno = tkinter.Tk()
+okno.title('bludisko')
+
+
+sirka, vyska, mapa = nacitaj_mapu('files/txt.txt')
+
+
+
+        # volame funkciu vytvor_platno tak, ze ju priradime do premennej. v zatvorke musia byt nazvy vsetkych premennych, ktore potrebuje na inicializaciu
+platno = vytvor_platno(okno, mapa, vyska, syrka, cell_size, wall)
+
+okno.mainloop()
+terminate = True
+
+
+
+
