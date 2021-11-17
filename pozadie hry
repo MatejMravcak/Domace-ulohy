@@ -10,9 +10,9 @@ def nacitaj_mapu():
 
     h = open(file = 'txt.txt')
 
-    sirka = int(h.readline(1))
+    sirka = int(h.readline())
 
-    vyska = int(h.readline(2))
+    vyska = int(h.readline())
 
     mapa = []
 
@@ -28,7 +28,7 @@ def nacitaj_mapu():
 
 ######################################################
 
-def vytvor_platno():
+def vytvor_platno(okno, mapa, vyska, sirka, cell_size, photoimage):
 
     platno = tkinter.Canvas(okno, \
                                         width= 500*cell_size, \
@@ -37,16 +37,15 @@ def vytvor_platno():
 
     platno.pack()
 
-    for y in range(0, 12):
-        for x in range(0, 12):
+    for y in range(0, vyska):
+        for x in range(0, sirka):
             if mapa[y][x] == '#':
-
-                platno.create_image(x * cell_size + 100 / 2, \
-                                    y * cell_size + 100 / 2, \
+                platno.create_image(x * cell_size + 50 / 2, \
+                                    y * cell_size + 50 / 2, \
                                     image = photoimage)
 
     return platno
-photoimage = PhotoImage(file='wall.png')
+
 mapa = []
 
 
@@ -56,22 +55,18 @@ vyska = 0
 
 cell_size = 80
 
-        ######################################################
+
 
 okno = tkinter.Tk()
 okno.title('bludisko')
 
 
-sirka, vyska, mapa = nacitaj_mapu('files/txt.txt')
+sirka, vyska, mapa = nacitaj_mapu()
 
-
-
+photoimage = tkinter.PhotoImage(file='wall.gif')
         # volame funkciu vytvor_platno tak, ze ju priradime do premennej. v zatvorke musia byt nazvy vsetkych premennych, ktore potrebuje na inicializaciu
-platno = vytvor_platno(okno, mapa, vyska, syrka, cell_size, wall)
+platno = vytvor_platno(okno, mapa, vyska, sirka, cell_size, photoimage)
+
 
 okno.mainloop()
 terminate = True
-
-
-
-
