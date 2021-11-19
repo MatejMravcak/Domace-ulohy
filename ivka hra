@@ -1,0 +1,184 @@
+#!/usr/bin/env python3
+
+import tkinter
+import threading
+import random
+import time
+
+######################################################
+
+def nacitaj_mapu(cesta):
+    #vytvorime cestu k suboru, ktory budeme pouzivat
+    subor = open(cesta)
+    #z prveho riadku v subore nacitame sirku
+    sirka = int(subor.readline())
+    # z druheho riadku v subore nacitame vysku
+    vyska = int(subor.readline())
+    # vytvorime premennu mapa, ktora je zoznam - list
+    mapa = []
+    # ulozime, ci sme inicializovali pacmana – môže mať hodnotu True alebo False. Aká bude na začiatku?
+    pac_found = ????
+    duch_found = ??????
+
+
+    #pre kazdy riadok mapy precitaj riadok a vytvor z nich zoznam
+    for y in range(0, vyska):
+        line = subor.readline()
+        mapa.append(list(line))
+    #uzavri subor
+    subor.close()
+    
+    #prehladavame maticu mapy (riadky, stlpce) a hladame umiestnenie postavičky a potvorky a v scene
+    for y in range(0, ?????????):
+        #ak sme ich oboch nasli, tak vybehni z cyklu
+        if ?????? and ?????:
+            break;
+        for x in range(0, ????????):
+            #ak na sucasnom policku sa ma nachadzat postavicka...
+            if mapa[y][x] == '?????':
+                #tak to prepiseme na volne policko a ulozime si poziciu a zmenime
+                #najdenie pacmana na True, aby sme vybehli z vonkajsieho cyklu von
+                mapa[y][x] = '???????? '
+                pac_x = x
+                pac_y = y
+                pac_found = ???????
+            #vkladame do sceny potvorku, zloducha
+            elif mapa[y][x] == '??????':
+                mapa[y][x] = ' '
+                duch_x = ?????
+                duch_y = ?????
+                duch_found= True
+                
+            if pac_found and duch_found:
+                break;
+                
+    # tieto hodnoty nam vrati z funkcie            
+    return sirka, vyska, mapa, ???????, pac_y, duch_x, ????????
+
+######################################################
+
+def vytvor_platno(okno, sirka, vyska, mapa, cell_size, stena):
+    platno = tkinter.Canvas (okno, \
+                             width = sirka * cell_size, \
+                             height = vyska * cell_size)
+    platno.config (bg='purple')
+    platno.pack ()
+
+    #ak je polozka v poli rovna #, tak vytvor obrazok pre stenu
+    for y in range(0, vyska):
+        for x in range(0, sirka):
+            if mapa[y][x] == '#':
+                platno.create_image (x * cell_size + cell_size / 2, \
+                                     y * cell_size + cell_size / 2, \
+                                     image=stena)
+    #vrati nakreslene platno
+    return platno
+
+
+######################################################
+
+# pohyb panacika pomocou sipok
+def pacmanmove (event):
+    #musime mu zadat globalne premenne - definovali sme ich mimo tejto funkcie
+    #, s ktorymi bude pracovat aj tato fcia
+    global pac_x
+    global pac_y
+    global platno
+    global pacman
+    global cell_size
+    global mapa
+    global skore
+    global gulicky
+    global okno
+
+    #pripravime si premenne pre poziciu pacmana po posunuti
+    target_x = ???????
+    ????????? = pac_y
+
+    #podla stlacenej klavesy nastavime cielovu poziciu pacmana - 1 neznamena
+    #pixel ale policko
+    
+    if event.keysym == 'Up':
+        target_y -= ????
+    elif event.keysym == 'Down':
+        ?????? += 1
+    elif event.keysym == 'Left':
+        ???????? = 1
+    elif event.keysym == 'Right':
+        target_x += 1
+
+    #ak je cielove policko prazdne, tak priradime nove suradnice
+    #musime mysliet na to, ze berie do uvahy stred obrazku, aby
+    #sme nevosli do steny
+    if mapa[target_y][target_x] != '?????????':
+        #zapamatame si nove suradnice pacmana
+        ?????? = target_x
+        pac_y = ?????????
+        #posunieme obrazok
+        platno.coords(pacman, \
+                      target_x * cell_size + cell_size / 2, \
+                      target_y * cell_size + cell_size / 2)
+
+
+        
+    global duch_x
+    global duch_y
+        
+######################################################
+        
+# mapa - steny a prechody (1. index - vyska, 2. index sirka)
+mapa = []
+
+# pozicia panacika v scene
+pac_x = 0
+pac_y = 0
+
+duch_x = ??????
+duch_y =??????
+
+# rozmery mapy
+sirka = 20
+vyska = 0
+
+# rozmer policka (px)
+cell_size = 80
+
+######################################################
+
+
+okno = tkinter.Tk()
+okno.title ('Moj Pacman')
+
+#nacitaj zo suboru mapu a vratene hodnoty uloz do premennych.
+#vsetky nazvy premennych sesdia s lokalnymi premennymi, ale nie su to totozne
+#premenne. 
+sirka, vyska, mapa, pac_x, pac_y, duch_x, duch_y = nacitaj_mapu('files/pacman.txt')
+
+# obrazok si musime odlozit v premennej, ktora prezije platno
+wall = tkinter.PhotoImage (file= 'files/wall.gif')
+
+platno = vytvor_platno(okno, sirka, vyska, mapa, cell_size, wall)
+
+
+#nacitame data k obrazku a zobrazime ho na konkretnych suradniciach
+pacman_data = tkinter.PhotoImage (file= 'files/pac1.gif')
+pacman = platno.create_image (pac_x * cell_size + cell_size / 2, \
+                              pac_y * cell_size + cell_size / 2, \
+                              image=pacman_data)
+
+duch_data = tkinter.PhotoImage (file= 'files/duch.gif')
+duch = platno.create_image (duch_x * cell_size + cell_size / 2, \
+                            duch_y * cell_size + cell_size / 2, \
+                            image=duch_data)
+duch_smer = 3
+terminate = False
+
+platno.bind_all ('<KeyPress-Up>', pacmanmove)
+platno.bind_all ('<KeyPress-Down>', pacmanmove)
+platno.bind_all ('<KeyPress-Left>', pacmanmove)
+platno.bind_all ('<KeyPress-Right>', pacmanmove)
+platno.bind_all ('<KeyPress-Escape>', lambda key: okno.destroy())
+
+duch_timer.start()
+okno.mainloop()
+terminate = True
