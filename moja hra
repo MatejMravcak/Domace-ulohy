@@ -3,9 +3,8 @@ import threading
 import random
 import time
 
-
 def nacitaj_mapu():
-    h = open(file='txt')
+    h = open(file='txt.txt')
 
     sirka = int(h.readline())
 
@@ -16,12 +15,15 @@ def nacitaj_mapu():
     pacman = False
     mario = False
     # pre kazdy riadok mapy precitaj kazdy riadok a vytvor z nich zoznam (rozsah je po vysku)
-    for y in range(0, 12):
+    for i in range(0, 12):
         citat = h.readline()
         mapa.append(list(citat))
 
     h.close()
-
+    duch_x = 0
+    duch_y = 0
+    pac_x = 0
+    pac_y = 0
     for y in range(0, vyska):
         # ak sme ich oboch nasli, tak vybehni z cyklu
         if pacman and mario:
@@ -34,19 +36,22 @@ def nacitaj_mapu():
                 mapa[y][x] = ' '
                 pac_x = x
                 pac_y = y
+
                 pacman = True
                 # vkladame do sceny potvorku, zloducha
-            elif mapa[y][x] == 'v':
+            elif mapa[y][x] == 'm':
                 mapa[y][x] = ' '
                 duch_x = x
                 duch_y = y
+
+
                 mario = True
 
             if pacman and mario:
-                break;
+                    break;
 
 
-        return sirka, vyska, mapa, pac_x , pac_y, duch_x, duch_y
+    return sirka, vyska, mapa, pac_x, pac_y, duch_x, duch_y
 
 ######################################################
 
@@ -92,12 +97,12 @@ def vytvor_platno(mapa, vyska, sirka, cell_size, photoimage):
 
 
 
+
 pac_x = 0
 pac_y = 0
 
 duch_x = 0
 duch_y = 0
-
 mapa = []
 
 sirka = 20
@@ -105,17 +110,18 @@ vyska = 0
 
 cell_size = 80
 
-sirka, vyska, mapa, pac_x , pac_y, duch_x, duch_y = nacitaj_mapu()
+
 okno = tkinter.Tk()
 okno.title('bludisko')
 
-
+sirka, vyska, mapa, pac_x, pac_y, duch_x, duch_y = nacitaj_mapu()
 
 
 
 photoimage = tkinter.PhotoImage(file='wall.png')
+
 # volame funkciu vytvor_platno tak, ze ju priradime do premennej. v zatvorke musia byt nazvy vsetkych premennych, ktore potrebuje na inicializaciu
-canvas = vytvor_platno(okno, mapa, vyska, sirka, cell_size, photoimage)
+canvas = tkinter.Canvas(okno, vyska, sirka, cell_size, photoimage)
 
 hlava = tkinter.PhotoImage(file='files/duck.png')
 pacman = canvas.create_image (pac_x * cell_size + cell_size / 2, \
