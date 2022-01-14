@@ -59,26 +59,43 @@ def nacitaj_mapu():
 
 
 def movephotoimage(event):
+
+    global pac_x
+    global pac_y
+    global platno
+    global pacman
+    global cell_size
+    global mapa
+    global skore
+    global gulicky
+    global okno
+
+    target_x = pac_x
+    target_y = pac_y
+
     if event.keysym == 'Up':
         canvas.move(1, 0, -4)
+
     elif event.keysym == 'Down':
         canvas.move(1, 0, 4)
     elif event.keysym == 'Left':
         canvas.move(1, -4, 0)
     elif event.keysym == 'Right':
         canvas.move(1, 4, 0)
-    elif event.keysym == 'w':
-        canvas.move(2, 0, -4)
-    elif event.keysym == 's':
-        canvas.move(2, 0, 4)
-    elif event.keysym == 'a':
-        canvas.move(2, -4, 0)
-    else:
-        canvas.move(2, 4, 0)
 
+    if mapa[target_y][target_x] != ' ':
+        # zapamatame si nove suradnice pacmana
+        pac_x = target_x
+        pac_y = target_y
+        # posunieme obrazok
+        platno.coords(pacman, \
+                      target_x * cell_size + cell_size / 2, \
+                      target_y * cell_size + cell_size / 2)
 
+    global duch_x
+    global duch_y
 
-def vytvor_platno(mapa, vyska, sirka, cell_size, photoimage):
+def vytvor_platno(okno, mapa, vyska, sirka, cell_size, stena):
     canvas = tkinter.Canvas(okno, \
                             width=500 * cell_size, \
                             height=500 * cell_size)
@@ -89,9 +106,9 @@ def vytvor_platno(mapa, vyska, sirka, cell_size, photoimage):
     for y in range(0, vyska):
         for x in range(0, sirka):
             if mapa[y][x] == '#':
-                canvas.create_image(x * cell_size + 150 / 2, \
-                                    y * cell_size + 150 / 2, \
-                                    image=photoimage)
+                canvas.create_image(x * cell_size + cell_size / 2, \
+                                    y * cell_size + cell_size / 2, \
+                                    image=stena)
 
     return canvas
 
@@ -114,17 +131,17 @@ cell_size = 80
 okno = tkinter.Tk()
 okno.title('bludisko')
 
-sirka, vyska, mapa, pac_x, pac_y, duch_x, duch_y = nacitaj_mapu()
+sirka, vyska, mapa, pac_x, pac_y, duch_x, duch_y = nacitaj_mapu('textat.txt')
 
 
 
 photoimage = tkinter.PhotoImage(file='wall.png')
 
 # volame funkciu vytvor_platno tak, ze ju priradime do premennej. v zatvorke musia byt nazvy vsetkych premennych, ktore potrebuje na inicializaciu
-canvas = tkinter.Canvas(okno, vyska, sirka, cell_size, photoimage)
+canvas = tkinter.Canvas()
 
 hlava = tkinter.PhotoImage(file='files/duck.png')
-pacman = canvas.create_image (pac_x * cell_size + cell_size / 2, \
+pacman_obraz = canvas.create_image (pac_x * cell_size + cell_size / 2, \
                               pac_y * cell_size + cell_size / 2, \
                               image=hlava)
 
